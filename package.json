@@ -1,0 +1,32 @@
+{
+  "name": "tabletennis-handicap",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/Brianzchen/tabletennis-handicap.git",
+  "author": "Brian Chen <bchen.chen93@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "watch": "webpack --watch"
+  },
+  "dependencies": {
+    "lodash": "^4.17.4",
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2"
+  },
+  "devDependencies": {
+    "babel-core": "^6.21.0",
+    "babel-eslint": "^7.1.1",
+    "babel-loader": "^6.2.10",
+    "babel-plugin-transform-class-properties": "^6.19.0",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-es2016": "^6.16.0",
+    "babel-preset-es2017": "^6.16.0",
+    "babel-preset-react": "^6.16.0",
+    "eslint": "3.13.0",
+    "eslint-config-airbnb": "^14.0.0",
+    "eslint-plugin-import": "2.2.0",
+    "eslint-plugin-jsx-a11y": "3.0.2",
+    "eslint-plugin-react": "6.9.0",
+    "webpack": "^1.14.0"
+  }
+}
