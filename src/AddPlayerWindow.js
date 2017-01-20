@@ -1,5 +1,4 @@
 import React from 'react';
-import Firebase from 'firebase';
 
 import FormRow from './FormRow';
 
@@ -17,11 +16,11 @@ export default class AddPlayerWindow extends React.Component {
     return (
       <div style={this.props.style}>
         <div style={styles.background} />
-        <div>
-          <FormRow name={`Name`} type={`string`} />
-          <FormRow name={`Initial Score`} type={`number`} />
-          <button onClick={this.addPlayer}>Add</button>
-        </div>
+        <form onSubmit={this.handleSubmit}>
+          <FormRow name={`Name`} type={`string`} onChange={this.handleNameChange} />
+          <FormRow name={`Initial Score`} type={`number`} onChange={this.handleScoreChange} />
+          <input type={`submit`} value={`Add`} />
+        </form>
       </div>
     );
   }
@@ -29,17 +28,34 @@ export default class AddPlayerWindow extends React.Component {
   constructor(props) {
     super(props);
 
-    this.database = Firebase.database();
+    this.state = {
+      name: ``,
+      score: 0,
+    };
   }
 
-  addPlayer = () => {
-    this.database.red(`players/${this.name}`).set({
-      name: this.name,
-      score: this.score,
+  handleNameChange = event => {
+    this.setState({
+      name: event.target.value,
     });
+  }
+
+  handleScoreChange = event => {
+    this.setState({
+      score: event.target.value,
+    });
+  }
+
+  handleSubmit = event => {
+    console.log(`you added a player! time to add to databse and refresh`); // eslint-disable-line
+    console.log(this.state.name); // eslint-disable-line
+    console.log(this.state.score); // eslint-disable-line
+    this.props.onSubmit();
+    event.preventDefault();
   }
 }
 
 AddPlayerWindow.propTypes = {
   style: React.PropTypes.object.isRequired,
+  onSubmit: React.PropTypes.func.isRequired,
 };

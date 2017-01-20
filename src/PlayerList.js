@@ -15,10 +15,13 @@ export default class PlayerList extends React.Component {
 
     return (
       <div>
-        <button onClick={this.addPlayer}>
+        <button onClick={this.openAddPlayer}>
           Add
         </button>
-        <AddPlayerWindow style={this.state.add ? styles.addPlayerWindowVisible : styles.addPlayerWindowHidden} />
+        <AddPlayerWindow
+          style={this.state.add ? styles.addPlayerWindowVisible : styles.addPlayerWindowHidden}
+          onSubmit={this.submitAddPlayer}
+        />
       </div>
     );
   }
@@ -31,13 +34,18 @@ export default class PlayerList extends React.Component {
     };
   }
 
-  addPlayer = () => {
+  openAddPlayer = () => {
     this.setState({
       add: true,
+    });
+  }
+
+  submitAddPlayer = () => {
+    this.setState({
+      add: false,
     });
   }
 }
 
 PlayerList.propTypes = {
-
 };
