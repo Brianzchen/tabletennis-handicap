@@ -21540,11 +21540,11 @@
 
 	var _PlayerList2 = _interopRequireDefault(_PlayerList);
 
-	var _Tab = __webpack_require__(192);
+	var _Tab = __webpack_require__(193);
 
 	var _Tab2 = _interopRequireDefault(_Tab);
 
-	var _Tabs = __webpack_require__(193);
+	var _Tabs = __webpack_require__(194);
 
 	var _Tabs2 = _interopRequireDefault(_Tabs);
 
@@ -39485,7 +39485,7 @@
 
 	var _AddPlayerWindow2 = _interopRequireDefault(_AddPlayerWindow);
 
-	var _PlayerListPlayer = __webpack_require__(194);
+	var _PlayerListPlayer = __webpack_require__(192);
 
 	var _PlayerListPlayer2 = _interopRequireDefault(_PlayerListPlayer);
 
@@ -39503,6 +39503,8 @@
 	  _createClass(PlayerList, [{
 	    key: 'render',
 	    value: function render() {
+	      var _this2 = this;
+
 	      var styles = {
 	        addPlayerWindowHidden: {
 	          visibility: 'hidden'
@@ -39513,7 +39515,7 @@
 	      };
 
 	      var players = _lodash2.default.map(this.players, function (o, index) {
-	        return _react2.default.createElement(_PlayerListPlayer2.default, { key: index, name: o.name, rank: o.rank });
+	        return _react2.default.createElement(_PlayerListPlayer2.default, { key: index, player: o, database: _this2.props.database });
 	      });
 
 	      return _react2.default.createElement(
@@ -39559,11 +39561,28 @@
 
 	    _this.props.database.ref('players').on('child_added', function (snapshot) {
 	      var value = snapshot.val();
+	      var baseUrl = 'https://table-tennis-handicap.firebaseio.com/players/';
+	      var url = snapshot.ref.toString();
+	      var id = url.substring(baseUrl.length);
 	      _this.players.push({
 	        name: value.name,
-	        rank: value.rank
+	        rank: value.rank,
+	        id: id
 	      });
 	      _this.forceUpdate();
+	    });
+
+	    _this.props.database.ref('players').on('child_changed', function (snapshot) {
+	      var baseUrl = 'https://table-tennis-handicap.firebaseio.com/players/';
+	      var url = snapshot.ref.toString();
+	      var id = url.substring(baseUrl.length);
+	      for (var i = 0, len = _this.players.length; i < len; i++) {
+	        if (_this.players[i].id === id) {
+	          _this.players[i].name = snapshot.val().name;
+	          _this.forceUpdate();
+	          break;
+	        }
+	      }
 	    });
 	    return _this;
 	  }
@@ -39748,6 +39767,115 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+	var PlayerListPlayer = function (_React$Component) {
+	  _inherits(PlayerListPlayer, _React$Component);
+
+	  _createClass(PlayerListPlayer, [{
+	    key: 'render',
+	    value: function render() {
+	      var playerName = this.state.edit ? _react2.default.createElement(
+	        'form',
+	        { onSubmit: this.saveName },
+	        _react2.default.createElement('input', { type: 'text', placeholder: this.props.player.name, onChange: this.handleNameChange })
+	      ) : _react2.default.createElement(
+	        'span',
+	        null,
+	        this.props.player.name
+	      );
+
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'div',
+	          { onClick: this.editPlayerName },
+	          playerName
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          null,
+	          this.props.player.rank
+	        )
+	      );
+	    }
+	  }]);
+
+	  function PlayerListPlayer(props) {
+	    _classCallCheck(this, PlayerListPlayer);
+
+	    var _this = _possibleConstructorReturn(this, (PlayerListPlayer.__proto__ || Object.getPrototypeOf(PlayerListPlayer)).call(this, props));
+
+	    _this.handleNameChange = function (event) {
+	      _this.setState({
+	        name: event.target.value
+	      });
+	    };
+
+	    _this.saveName = function (event) {
+	      event.preventDefault();
+	      if (_this.state.name.trim().length > 0) {
+	        _this.props.database.ref('players/' + _this.props.player.id + '/').update({
+	          name: _this.state.name
+	        }, function () {
+	          _this.setState({
+	            edit: false
+	          });
+	        });
+	      }
+	    };
+
+	    _this.editPlayerName = function () {
+	      _this.setState({
+	        edit: true
+	      });
+	    };
+
+	    _this.state = {
+	      edit: false,
+	      name: ''
+	    };
+	    return _this;
+	  }
+
+	  return PlayerListPlayer;
+	}(_react2.default.Component);
+
+	exports.default = PlayerListPlayer;
+
+
+	PlayerListPlayer.propTypes = {
+	  player: _react2.default.PropTypes.shape({
+	    name: _react2.default.PropTypes.string.isRequired,
+	    rank: _react2.default.PropTypes.string.isRequired,
+	    id: _react2.default.PropTypes.string.isRequired
+	  }).isRequired,
+	  database: _react2.default.PropTypes.object.isRequired
+	};
+
+/***/ },
+/* 193 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 	var Tab = function (_React$Component) {
 	  _inherits(Tab, _React$Component);
 
@@ -39794,7 +39922,7 @@
 	};
 
 /***/ },
-/* 193 */
+/* 194 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -39822,45 +39950,6 @@
 
 	Tabs.propTypes = {
 	  children: _react2.default.PropTypes.arrayOf(_react2.default.PropTypes.element).isRequired
-	};
-
-/***/ },
-/* 194 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.default = PlayerListPlayer;
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function PlayerListPlayer(props) {
-	  return _react2.default.createElement(
-	    'div',
-	    null,
-	    _react2.default.createElement(
-	      'div',
-	      null,
-	      props.name
-	    ),
-	    _react2.default.createElement(
-	      'div',
-	      null,
-	      props.rank
-	    )
-	  );
-	}
-
-	PlayerListPlayer.propTypes = {
-	  name: _react2.default.PropTypes.string.isRequired,
-	  rank: _react2.default.PropTypes.string.isRequired
 	};
 
 /***/ }
