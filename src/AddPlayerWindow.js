@@ -49,9 +49,24 @@ export default class AddPlayerWindow extends React.Component {
   handleSubmit = event => {
     this.props.onSubmit();
     event.preventDefault();
-    this.props.database.ref(`players/`).push({
-      name: this.state.name,
-      rank: this.state.rank,
+    const database = this.props.database.ref(`players/`);
+    database.once(`value`).then(snapshot => {
+      const players = snapshot.val();
+      let contains = false;
+      const keys = Object.keys(players);
+      for (let i = 0, len = keys.length; i < len; i++) {
+        if (players[keys[i]].name.toLowerCase() === this.state.name.toLowerCase()) {
+          contains = true;
+          break;
+        }
+      }
+
+      if (!contains) {
+        this.props.database.ref(`players/`).push({
+          name: this.state.name,
+          rank: this.state.rank,
+        });
+      }
     });
   }
 }

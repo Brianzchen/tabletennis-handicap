@@ -39652,9 +39652,24 @@
 	    _this.handleSubmit = function (event) {
 	      _this.props.onSubmit();
 	      event.preventDefault();
-	      _this.props.database.ref('players/').push({
-	        name: _this.state.name,
-	        rank: _this.state.rank
+	      var database = _this.props.database.ref('players/');
+	      database.once('value').then(function (snapshot) {
+	        var players = snapshot.val();
+	        var contains = false;
+	        var keys = Object.keys(players);
+	        for (var i = 0, len = keys.length; i < len; i++) {
+	          if (players[keys[i]].name.toLowerCase() === _this.state.name.toLowerCase()) {
+	            contains = true;
+	            break;
+	          }
+	        }
+
+	        if (!contains) {
+	          _this.props.database.ref('players/').push({
+	            name: _this.state.name,
+	            rank: _this.state.rank
+	          });
+	        }
 	      });
 	    };
 
