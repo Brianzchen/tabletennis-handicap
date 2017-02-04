@@ -39828,7 +39828,8 @@
 	        background: {}
 	      };
 
-	      var nameFocus = this.props.style.visibility === 'visible';
+	      // const nameFocus = (this.props.style.visibility === `visible`);
+	      var nameFocus = false;
 
 	      return _react2.default.createElement(
 	        'div',

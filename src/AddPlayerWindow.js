@@ -10,7 +10,8 @@ export default class AddPlayerWindow extends React.Component {
       },
     };
 
-    const nameFocus = (this.props.style.visibility === `visible`);
+    // const nameFocus = (this.props.style.visibility === `visible`);
+    const nameFocus = false;
 
     return (
       <div style={this.props.style}>
