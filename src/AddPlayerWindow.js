@@ -49,6 +49,9 @@ export default class AddPlayerWindow extends React.Component {
   handleSubmit = event => {
     this.props.onSubmit();
     event.preventDefault();
+
+    if (this.state.name.trim().length === 0) return;
+
     const database = this.props.database.ref(`players/`);
     database.once(`value`).then(snapshot => {
       const players = snapshot.val();
