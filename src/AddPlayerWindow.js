@@ -18,7 +18,7 @@ export default class AddPlayerWindow extends React.Component {
         <div style={styles.background} />
         <form onSubmit={this.handleSubmit}>
           <FormRow name={`Name`} type={`string`} onChange={this.handleNameChange} />
-          <FormRow name={`Initial Score`} type={`number`} onChange={this.handleScoreChange} />
+          <FormRow name={`Initial Rank`} type={`number`} onChange={this.handleScoreChange} />
           <input type={`submit`} value={`Add`} />
         </form>
       </div>
@@ -30,7 +30,7 @@ export default class AddPlayerWindow extends React.Component {
 
     this.state = {
       name: ``,
-      score: 0,
+      rank: 0,
     };
   }
 
@@ -42,20 +42,22 @@ export default class AddPlayerWindow extends React.Component {
 
   handleScoreChange = event => {
     this.setState({
-      score: event.target.value,
+      rank: event.target.value,
     });
   }
 
   handleSubmit = event => {
-    console.log(`you added a player! time to add to databse and refresh`); // eslint-disable-line
-    console.log(this.state.name); // eslint-disable-line
-    console.log(this.state.score); // eslint-disable-line
     this.props.onSubmit();
     event.preventDefault();
+    this.props.database.ref(`players/`).push({
+      name: this.state.name,
+      rank: this.state.rank,
+    });
   }
 }
 
 AddPlayerWindow.propTypes = {
   style: React.PropTypes.object.isRequired,
   onSubmit: React.PropTypes.func.isRequired,
+  database: React.PropTypes.object.isRequired,
 };

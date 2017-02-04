@@ -21,6 +21,7 @@ export default class PlayerList extends React.Component {
         <AddPlayerWindow
           style={this.state.add ? styles.addPlayerWindowVisible : styles.addPlayerWindowHidden}
           onSubmit={this.submitAddPlayer}
+          database={this.props.database}
         />
       </div>
     );
@@ -48,4 +49,5 @@ export default class PlayerList extends React.Component {
 }
 
 PlayerList.propTypes = {
+  database: React.PropTypes.object.isRequired,
 };

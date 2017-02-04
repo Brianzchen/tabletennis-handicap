@@ -1,5 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
+import * as Firebase from 'firebase';
 
 import GameMode from './GameMode';
 import PlayersList from './PlayerList';
@@ -31,6 +32,13 @@ export default class App extends React.Component {
 
   constructor(props) {
     super(props);
+
+    const config = {
+      apiKey: `AIzaSyAXe3eYpZ0AaGg5UvZjj7l6_pk-Lclopq0`,
+      authDomain: `table-tennis-handicap.firebaseapp.com`,
+      databaseURL: `https://table-tennis-handicap.firebaseio.com/`,
+    };
+    this.database = Firebase.initializeApp(config).database();
 
     this.tabs = [`Game`, `Players`];
 
