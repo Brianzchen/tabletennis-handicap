@@ -39462,7 +39462,7 @@
 	        _react2.default.createElement(_GameModePlayer2.default, { players: this.players, onSelect: this.getPlayerTwoDetails }),
 	        _react2.default.createElement(
 	          'button',
-	          null,
+	          { onClick: this.submit },
 	          'Submit'
 	        )
 	      );
@@ -39473,10 +39473,6 @@
 	    _classCallCheck(this, GameMode);
 
 	    var _this = _possibleConstructorReturn(this, (GameMode.__proto__ || Object.getPrototypeOf(GameMode)).call(this, props));
-
-	    _this.getPlayerDetails = function (event) {
-	      console.log(event.target.value);
-	    };
 
 	    _this.getPlayerOneDetails = function (playerOne) {
 	      _this.setState({ playerOne: playerOne }, function () {
@@ -39506,6 +39502,7 @@
 	      playerOne: undefined,
 	      playerTwo: undefined
 	    };
+
 	    _this.players = [];
 
 	    _this.props.database.ref('players').on('child_added', function (snapshot) {
@@ -39531,6 +39528,7 @@
 	}(_react2.default.Component);
 
 	exports.default = GameMode;
+
 
 	GameMode.propTypes = {
 	  database: _react2.default.PropTypes.object.isRequired
@@ -39584,21 +39582,19 @@
 	          s
 	        );
 	      });
-	      return (
-	        // <form onChangetarget={this.props.onSelect}>
+
+	      return _react2.default.createElement(
+	        'form',
+	        { onChange: this.getEvents },
 	        _react2.default.createElement(
-	          'form',
-	          { onChange: this.getEvents },
-	          _react2.default.createElement(
-	            'select',
-	            { onChange: this.setPlayer },
-	            playersOptions
-	          ),
-	          _react2.default.createElement(
-	            'select',
-	            { onChange: this.setScore },
-	            tableTennisValidScores
-	          )
+	          'select',
+	          { onChange: this.setPlayer },
+	          playersOptions
+	        ),
+	        _react2.default.createElement(
+	          'select',
+	          { onChange: this.setScore },
+	          tableTennisValidScores
 	        )
 	      );
 	    }
@@ -39608,10 +39604,6 @@
 	    _classCallCheck(this, GameModePlayer);
 
 	    var _this = _possibleConstructorReturn(this, (GameModePlayer.__proto__ || Object.getPrototypeOf(GameModePlayer)).call(this, props));
-
-	    _this.getEvents = function (event) {
-	      // console.log(thi  s.form);
-	    };
 
 	    _this.setPlayer = function (event) {
 	      _this.setState({ player: event.target.value }, function () {
