@@ -39594,6 +39594,14 @@
 	    return _this;
 	  }
 
+	  _createClass(PlayerList, [{
+	    key: 'componentWillUnmount',
+	    value: function componentWillUnmount() {
+	      this.props.database.ref('players').off('child_added');
+	      this.props.database.ref('players').off('child_changed');
+	    }
+	  }]);
+
 	  return PlayerList;
 	}(_react2.default.Component);
 

@@ -68,6 +68,11 @@ export default class PlayerList extends React.Component {
     });
   }
 
+  componentWillUnmount() {
+    this.props.database.ref(`players`).off(`child_added`);
+    this.props.database.ref(`players`).off(`child_changed`);
+  }
+
   openAddPlayer = () => {
     this.setState({
       add: true,
