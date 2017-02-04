@@ -21548,7 +21548,7 @@
 
 	var _Tabs2 = _interopRequireDefault(_Tabs);
 
-	var _Title = __webpack_require__(194);
+	var _Title = __webpack_require__(195);
 
 	var _Title2 = _interopRequireDefault(_Title);
 
@@ -39766,10 +39766,6 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _lodash = __webpack_require__(180);
-
-	var _lodash2 = _interopRequireDefault(_lodash);
-
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -39879,6 +39875,10 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _lodash = __webpack_require__(180);
+
+	var _lodash2 = _interopRequireDefault(_lodash);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -39977,6 +39977,38 @@
 	Tabs.propTypes = {
 	  children: _react2.default.PropTypes.arrayOf(_react2.default.PropTypes.element).isRequired
 	};
+
+/***/ },
+/* 195 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = Title;
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function Title() {
+	  var style = {
+	    background: '#0097A7',
+	    color: '#FFFFFF',
+	    fontSize: '2em',
+	    padding: '0.5em'
+	  };
+
+	  return _react2.default.createElement(
+	    'div',
+	    { style: style },
+	    'Table Tennis Handicap'
+	  );
+	}
 
 /***/ }
 /******/ ]);
