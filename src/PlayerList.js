@@ -15,7 +15,7 @@ export default class PlayerList extends React.Component {
       },
     };
 
-    const players = _.map(this.players, (o, index) => <PlayerListPlayer key={index} name={o.name} rank={o.rank} />);
+    const players = _.map(this.players, (o, index) => <PlayerListPlayer key={index} player={o} database={this.props.database} />);
 
     return (
       <div>
@@ -43,11 +43,28 @@ export default class PlayerList extends React.Component {
 
     this.props.database.ref(`players`).on(`child_added`, snapshot => {
       const value = snapshot.val();
+      const baseUrl = `https://table-tennis-handicap.firebaseio.com/players/`;
+      const url = snapshot.ref.toString();
+      const id = url.substring(baseUrl.length);
       this.players.push({
         name: value.name,
         rank: value.rank,
+        id,
       });
       this.forceUpdate();
+    });
+
+    this.props.database.ref(`players`).on(`child_changed`, snapshot => {
+      const baseUrl = `https://table-tennis-handicap.firebaseio.com/players/`;
+      const url = snapshot.ref.toString();
+      const id = url.substring(baseUrl.length);
+      for (let i = 0, len = this.players.length; i < len; i++) {
+        if (this.players[i].id === id) {
+          this.players[i].name = snapshot.val().name;
+          this.forceUpdate();
+          break;
+        }
+      }
     });
   }
 
