@@ -39477,9 +39477,17 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _lodash = __webpack_require__(180);
+
+	var _lodash2 = _interopRequireDefault(_lodash);
+
 	var _AddPlayerWindow = __webpack_require__(190);
 
 	var _AddPlayerWindow2 = _interopRequireDefault(_AddPlayerWindow);
+
+	var _PlayerListPlayer = __webpack_require__(194);
+
+	var _PlayerListPlayer2 = _interopRequireDefault(_PlayerListPlayer);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -39504,9 +39512,14 @@
 	        }
 	      };
 
+	      var players = _lodash2.default.map(this.players, function (o, index) {
+	        return _react2.default.createElement(_PlayerListPlayer2.default, { key: index, name: o.name, rank: o.rank });
+	      });
+
 	      return _react2.default.createElement(
 	        'div',
 	        null,
+	        players,
 	        _react2.default.createElement(
 	          'button',
 	          { onClick: this.openAddPlayer },
@@ -39541,6 +39554,17 @@
 	    _this.state = {
 	      add: false
 	    };
+
+	    _this.players = [];
+
+	    _this.props.database.ref('players').on('child_added', function (snapshot) {
+	      var value = snapshot.val();
+	      _this.players.push({
+	        name: value.name,
+	        rank: value.rank
+	      });
+	      _this.forceUpdate();
+	    });
 	    return _this;
 	  }
 
@@ -39783,6 +39807,45 @@
 
 	Tabs.propTypes = {
 	  children: _react2.default.PropTypes.arrayOf(_react2.default.PropTypes.element).isRequired
+	};
+
+/***/ },
+/* 194 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = PlayerListPlayer;
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function PlayerListPlayer(props) {
+	  return _react2.default.createElement(
+	    'div',
+	    null,
+	    _react2.default.createElement(
+	      'div',
+	      null,
+	      props.name
+	    ),
+	    _react2.default.createElement(
+	      'div',
+	      null,
+	      props.rank
+	    )
+	  );
+	}
+
+	PlayerListPlayer.propTypes = {
+	  name: _react2.default.PropTypes.string.isRequired,
+	  rank: _react2.default.PropTypes.string.isRequired
 	};
 
 /***/ }
