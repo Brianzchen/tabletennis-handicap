@@ -4,8 +4,17 @@ import _ from 'lodash';
 
 export default class GameModePlayer extends React.Component {
   render() {
-    const playersOptions = _.map(this.props.players, p => <option key={p.name} >{p.name}</option>);
-    const tableTennisValidScores = _.map(_.range(12), s => <option key={s}>{s}</option>);
+    const playersOptions = _.map(this.props.players, o => <option key={o.name} >{o.name}</option>);
+
+    const tableTennisValidScores = _.map(_.range(13), o => {
+      if (o === 12) {
+        return (<option key={o}>Deuce</option>);
+      }
+
+      return (
+        <option key={o}>{o}</option>
+      );
+    });
 
     return (
       <form onChange={this.getEvents} >

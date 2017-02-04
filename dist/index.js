@@ -39454,6 +39454,8 @@
 	  _createClass(GameMode, [{
 	    key: 'render',
 	    value: function render() {
+	      var disableSumbit = !this.state.playerOne || !this.state.playerTwo || this.state.playerOne === this.state.playerTwo;
+
 	      return _react2.default.createElement(
 	        'div',
 	        null,
@@ -39462,7 +39464,7 @@
 	        _react2.default.createElement(_GameModePlayer2.default, { players: this.players, onSelect: this.getPlayerTwoDetails }),
 	        _react2.default.createElement(
 	          'button',
-	          { onClick: this.submit },
+	          { onClick: this.submit, disabled: disableSumbit },
 	          'Submit'
 	        )
 	      );
@@ -39503,7 +39505,7 @@
 	      playerTwo: undefined
 	    };
 
-	    _this.players = [];
+	    _this.players = [{ name: 'default', rank: 0 }];
 
 	    _this.props.database.ref('players').on('child_added', function (snapshot) {
 	      var value = snapshot.val();
@@ -39568,18 +39570,27 @@
 	  _createClass(GameModePlayer, [{
 	    key: 'render',
 	    value: function render() {
-	      var playersOptions = _lodash2.default.map(this.props.players, function (p) {
+	      var playersOptions = _lodash2.default.map(this.props.players, function (o) {
 	        return _react2.default.createElement(
 	          'option',
-	          { key: p.name },
-	          p.name
+	          { key: o.name },
+	          o.name
 	        );
 	      });
-	      var tableTennisValidScores = _lodash2.default.map(_lodash2.default.range(12), function (s) {
+
+	      var tableTennisValidScores = _lodash2.default.map(_lodash2.default.range(13), function (o) {
+	        if (o === 12) {
+	          return _react2.default.createElement(
+	            'option',
+	            { key: o },
+	            'Deuce'
+	          );
+	        }
+
 	        return _react2.default.createElement(
 	          'option',
-	          { key: s },
-	          s
+	          { key: o },
+	          o
 	        );
 	      });
 

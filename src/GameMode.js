@@ -4,12 +4,17 @@ import GameModePlayer from './GameModePlayer';
 
 export default class GameMode extends React.Component {
   render() {
+    const disableSumbit = (!this.state.playerOne || !this.state.playerTwo) ||
+      (this.state.playerOne === this.state.playerTwo);
+
     return (
       <div>
         <GameModePlayer players={this.players} onSelect={this.getPlayerOneDetails} />
         vs
         <GameModePlayer players={this.players} onSelect={this.getPlayerTwoDetails} />
-        <button onClick={this.submit}>Submit</button>
+        <button onClick={this.submit} disabled={disableSumbit}>
+          Submit
+        </button>
       </div>
     );
   }
@@ -22,7 +27,7 @@ export default class GameMode extends React.Component {
       playerTwo: undefined,
     };
 
-    this.players = [];
+    this.players = [{ name: `default`, rank: 0 }];
 
     this.props.database.ref(`players`).on(`child_added`, snapshot => {
       const value = snapshot.val();
