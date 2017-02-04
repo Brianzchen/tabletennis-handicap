@@ -39484,9 +39484,17 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _lodash = __webpack_require__(180);
+
+	var _lodash2 = _interopRequireDefault(_lodash);
+
 	var _AddPlayerWindow = __webpack_require__(190);
 
 	var _AddPlayerWindow2 = _interopRequireDefault(_AddPlayerWindow);
+
+	var _PlayerListPlayer = __webpack_require__(194);
+
+	var _PlayerListPlayer2 = _interopRequireDefault(_PlayerListPlayer);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -39511,9 +39519,14 @@
 	        }
 	      };
 
+	      var players = _lodash2.default.map(this.players, function (o, index) {
+	        return _react2.default.createElement(_PlayerListPlayer2.default, { key: index, name: o.name, rank: o.rank });
+	      });
+
 	      return _react2.default.createElement(
 	        'div',
 	        null,
+	        players,
 	        _react2.default.createElement(
 	          'button',
 	          { onClick: this.openAddPlayer },
@@ -39548,6 +39561,17 @@
 	    _this.state = {
 	      add: false
 	    };
+
+	    _this.players = [];
+
+	    _this.props.database.ref('players').on('child_added', function (snapshot) {
+	      var value = snapshot.val();
+	      _this.players.push({
+	        name: value.name,
+	        rank: value.rank
+	      });
+	      _this.forceUpdate();
+	    });
 	    return _this;
 	  }
 
@@ -39635,9 +39659,24 @@
 	    _this.handleSubmit = function (event) {
 	      _this.props.onSubmit();
 	      event.preventDefault();
-	      _this.props.database.ref('players/').push({
-	        name: _this.state.name,
-	        rank: _this.state.rank
+	      var database = _this.props.database.ref('players/');
+	      database.once('value').then(function (snapshot) {
+	        var players = snapshot.val();
+	        var contains = false;
+	        var keys = Object.keys(players);
+	        for (var i = 0, len = keys.length; i < len; i++) {
+	          if (players[keys[i]].name.toLowerCase() === _this.state.name.toLowerCase()) {
+	            contains = true;
+	            break;
+	          }
+	        }
+
+	        if (!contains) {
+	          _this.props.database.ref('players/').push({
+	            name: _this.state.name,
+	            rank: _this.state.rank
+	          });
+	        }
 	      });
 	    };
 
@@ -39820,7 +39859,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.default = Title;
+	exports.default = PlayerListPlayer;
 
 	var _react = __webpack_require__(2);
 
@@ -39828,20 +39867,27 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	function Title() {
-	  var style = {
-	    background: '#0097A7',
-	    color: '#FFFFFF',
-	    fontSize: '2em',
-	    padding: '0.5em'
-	  };
-
+	function PlayerListPlayer(props) {
 	  return _react2.default.createElement(
 	    'div',
-	    { style: style },
-	    'Table Tennis Handicap'
+	    null,
+	    _react2.default.createElement(
+	      'div',
+	      null,
+	      props.name
+	    ),
+	    _react2.default.createElement(
+	      'div',
+	      null,
+	      props.rank
+	    )
 	  );
 	}
+
+	PlayerListPlayer.propTypes = {
+	  name: _react2.default.PropTypes.string.isRequired,
+	  rank: _react2.default.PropTypes.string.isRequired
+	};
 
 /***/ }
 /******/ ]);

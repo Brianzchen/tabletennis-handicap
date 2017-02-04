@@ -1,6 +1,8 @@
 import React from 'react';
+import _ from 'lodash';
 
 import AddPlayerWindow from './AddPlayerWindow';
+import PlayerListPlayer from './PlayerListPlayer';
 
 export default class PlayerList extends React.Component {
   render() {
@@ -13,8 +15,11 @@ export default class PlayerList extends React.Component {
       },
     };
 
+    const players = _.map(this.players, (o, index) => <PlayerListPlayer key={index} name={o.name} rank={o.rank} />);
+
     return (
       <div>
+        {players}
         <button onClick={this.openAddPlayer}>
           Add
         </button>
@@ -33,6 +38,17 @@ export default class PlayerList extends React.Component {
     this.state = {
       add: false,
     };
+
+    this.players = [];
+
+    this.props.database.ref(`players`).on(`child_added`, snapshot => {
+      const value = snapshot.val();
+      this.players.push({
+        name: value.name,
+        rank: value.rank,
+      });
+      this.forceUpdate();
+    });
   }
 
   openAddPlayer = () => {
