@@ -21536,19 +21536,19 @@
 
 	var _GameMode2 = _interopRequireDefault(_GameMode);
 
-	var _PlayerList = __webpack_require__(189);
+	var _PlayerList = __webpack_require__(190);
 
 	var _PlayerList2 = _interopRequireDefault(_PlayerList);
 
-	var _Tab = __webpack_require__(193);
+	var _Tab = __webpack_require__(194);
 
 	var _Tab2 = _interopRequireDefault(_Tab);
 
-	var _Tabs = __webpack_require__(194);
+	var _Tabs = __webpack_require__(195);
 
 	var _Tabs2 = _interopRequireDefault(_Tabs);
 
-	var _Title = __webpack_require__(195);
+	var _Title = __webpack_require__(196);
 
 	var _Title2 = _interopRequireDefault(_Title);
 
@@ -39436,6 +39436,10 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _GameModePlayer = __webpack_require__(189);
+
+	var _GameModePlayer2 = _interopRequireDefault(_GameModePlayer);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -39447,16 +39451,79 @@
 	var GameMode = function (_React$Component) {
 	  _inherits(GameMode, _React$Component);
 
-	  function GameMode() {
-	    _classCallCheck(this, GameMode);
-
-	    return _possibleConstructorReturn(this, (GameMode.__proto__ || Object.getPrototypeOf(GameMode)).apply(this, arguments));
-	  }
-
 	  _createClass(GameMode, [{
 	    key: 'render',
 	    value: function render() {
-	      return _react2.default.createElement('div', null);
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(_GameModePlayer2.default, { players: this.players, onSelect: this.getPlayerOneDetails }),
+	        'vs',
+	        _react2.default.createElement(_GameModePlayer2.default, { players: this.players, onSelect: this.getPlayerTwoDetails }),
+	        _react2.default.createElement(
+	          'button',
+	          null,
+	          'Submit'
+	        )
+	      );
+	    }
+	  }]);
+
+	  function GameMode(props) {
+	    _classCallCheck(this, GameMode);
+
+	    var _this = _possibleConstructorReturn(this, (GameMode.__proto__ || Object.getPrototypeOf(GameMode)).call(this, props));
+
+	    _this.getPlayerDetails = function (event) {
+	      console.log(event.target.value);
+	    };
+
+	    _this.getPlayerOneDetails = function (playerOne) {
+	      _this.setState({ playerOne: playerOne }, function () {
+	        _this.recalculate();
+	      });
+	    };
+
+	    _this.getPlayerTwoDetails = function (playerTwo) {
+	      _this.setState({ playerTwo: playerTwo }, function () {
+	        _this.recalculate();
+	      });
+	    };
+
+	    _this.recalculate = function () {
+	      if (_this.state.playerOne && _this.state.playerTwo) {
+	        console.log(_this.state.playerOne);
+	        console.log(_this.state.playerTwo);
+	      }
+	    };
+
+	    _this.submit = function () {
+	      console.log(_this.state.playerOne);
+	      console.log(_this.state.playerTwo);
+	    };
+
+	    _this.state = {
+	      playerOne: undefined,
+	      playerTwo: undefined
+	    };
+	    _this.players = [];
+
+	    _this.props.database.ref('players').on('child_added', function (snapshot) {
+	      var value = snapshot.val();
+	      _this.players.push({
+	        name: value.name,
+	        rank: value.rank
+	      });
+	      _this.forceUpdate();
+	    });
+	    return _this;
+	  }
+
+	  _createClass(GameMode, [{
+	    key: 'componentWillUnmount',
+	    value: function componentWillUnmount() {
+	      this.props.database.ref('players').off('child_added');
+	      this.props.database.ref('players').off('child_changed');
 	    }
 	  }]);
 
@@ -39465,8 +39532,9 @@
 
 	exports.default = GameMode;
 
-
-	GameMode.propTypes = {};
+	GameMode.propTypes = {
+	  database: _react2.default.PropTypes.object.isRequired
+	};
 
 /***/ },
 /* 189 */
@@ -39488,11 +39556,116 @@
 
 	var _lodash2 = _interopRequireDefault(_lodash);
 
-	var _AddPlayerWindow = __webpack_require__(190);
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var GameModePlayer = function (_React$Component) {
+	  _inherits(GameModePlayer, _React$Component);
+
+	  _createClass(GameModePlayer, [{
+	    key: 'render',
+	    value: function render() {
+	      var playersOptions = _lodash2.default.map(this.props.players, function (p) {
+	        return _react2.default.createElement(
+	          'option',
+	          { key: p.name },
+	          p.name
+	        );
+	      });
+	      var tableTennisValidScores = _lodash2.default.map(_lodash2.default.range(12), function (s) {
+	        return _react2.default.createElement(
+	          'option',
+	          { key: s },
+	          s
+	        );
+	      });
+	      return (
+	        // <form onChangetarget={this.props.onSelect}>
+	        _react2.default.createElement(
+	          'form',
+	          { onChange: this.getEvents },
+	          _react2.default.createElement(
+	            'select',
+	            { onChange: this.setPlayer },
+	            playersOptions
+	          ),
+	          _react2.default.createElement(
+	            'select',
+	            { onChange: this.setScore },
+	            tableTennisValidScores
+	          )
+	        )
+	      );
+	    }
+	  }]);
+
+	  function GameModePlayer(props) {
+	    _classCallCheck(this, GameModePlayer);
+
+	    var _this = _possibleConstructorReturn(this, (GameModePlayer.__proto__ || Object.getPrototypeOf(GameModePlayer)).call(this, props));
+
+	    _this.getEvents = function (event) {
+	      // console.log(thi  s.form);
+	    };
+
+	    _this.setPlayer = function (event) {
+	      _this.setState({ player: event.target.value }, function () {
+	        _this.props.onSelect(_this.state.player);
+	      });
+	    };
+
+	    _this.setScore = function (event) {
+	      _this.setState({ score: event.target.value });
+	    };
+
+	    _this.state = {
+	      player: '',
+	      score: 0
+	    };
+	    return _this;
+	  }
+
+	  return GameModePlayer;
+	}(_react2.default.Component);
+
+	exports.default = GameModePlayer;
+
+
+	GameModePlayer.propTypes = {
+	  players: _react2.default.PropTypes.arrayOf(_react2.default.PropTypes.object).isRequired,
+	  onSelect: _react2.default.PropTypes.func.isRequired
+	};
+
+/***/ },
+/* 190 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _lodash = __webpack_require__(180);
+
+	var _lodash2 = _interopRequireDefault(_lodash);
+
+	var _AddPlayerWindow = __webpack_require__(191);
 
 	var _AddPlayerWindow2 = _interopRequireDefault(_AddPlayerWindow);
 
-	var _PlayerListPlayer = __webpack_require__(192);
+	var _PlayerListPlayer = __webpack_require__(193);
 
 	var _PlayerListPlayer2 = _interopRequireDefault(_PlayerListPlayer);
 
@@ -39613,7 +39786,7 @@
 	};
 
 /***/ },
-/* 190 */
+/* 191 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -39628,7 +39801,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _FormRow = __webpack_require__(191);
+	var _FormRow = __webpack_require__(192);
 
 	var _FormRow2 = _interopRequireDefault(_FormRow);
 
@@ -39740,7 +39913,7 @@
 	};
 
 /***/ },
-/* 191 */
+/* 192 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -39814,7 +39987,7 @@
 	};
 
 /***/ },
-/* 192 */
+/* 193 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -39936,7 +40109,7 @@
 	};
 
 /***/ },
-/* 193 */
+/* 194 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -40021,7 +40194,7 @@
 	};
 
 /***/ },
-/* 194 */
+/* 195 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -40055,7 +40228,7 @@
 	};
 
 /***/ },
-/* 195 */
+/* 196 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
