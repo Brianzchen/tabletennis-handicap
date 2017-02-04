@@ -6,7 +6,7 @@ export default class FormRow extends React.Component {
       <label htmlFor={this.props.name}>
         {this.props.name}
         <input
-          ref={o => { this.input = o; }}id={this.props.name}
+          ref={o => { this.input = o; }} id={this.props.name}
           type={this.props.type} onChange={this.props.onChange}
         />
       </label>

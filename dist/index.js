@@ -21578,7 +21578,7 @@
 	        return _react2.default.createElement(_Tab2.default, { name: o, onClick: _this2.onChangeTab, key: o, selected: o === _this2.state.tabName });
 	      });
 
-	      var body = this.state.tabName === 'Game' ? _react2.default.createElement(_GameMode2.default, { database: this.database }) : _react2.default.createElement(_PlayerList2.default, { database: this.database });
+	      var body = this.state.tabName === 'Game' ? _react2.default.createElement(_GameMode2.default, { database: this.database, players: this.players }) : _react2.default.createElement(_PlayerList2.default, { database: this.database, players: this.players });
 
 	      return _react2.default.createElement(
 	        'div',
@@ -21609,6 +21609,12 @@
 	      });
 	    };
 
+	    _this.tabs = ['Game', 'Players'];
+
+	    _this.state = {
+	      tabName: 'Game'
+	    };
+
 	    var config = {
 	      apiKey: 'AIzaSyAXe3eYpZ0AaGg5UvZjj7l6_pk-Lclopq0',
 	      authDomain: 'table-tennis-handicap.firebaseapp.com',
@@ -21616,11 +21622,33 @@
 	    };
 	    _this.database = Firebase.initializeApp(config).database();
 
-	    _this.tabs = ['Game', 'Players'];
+	    _this.players = [];
 
-	    _this.state = {
-	      tabName: 'Game'
-	    };
+	    _this.database.ref('players').on('child_added', function (snapshot) {
+	      var value = snapshot.val();
+	      var baseUrl = 'https://table-tennis-handicap.firebaseio.com/players/';
+	      var url = snapshot.ref.toString();
+	      var id = url.substring(baseUrl.length);
+	      _this.players.push({
+	        name: value.name,
+	        rank: value.rank,
+	        id: id
+	      });
+	      _this.forceUpdate();
+	    });
+
+	    _this.database.ref('players').on('child_changed', function (snapshot) {
+	      var baseUrl = 'https://table-tennis-handicap.firebaseio.com/players/';
+	      var url = snapshot.ref.toString();
+	      var id = url.substring(baseUrl.length);
+	      for (var i = 0, len = _this.players.length; i < len; i++) {
+	        if (_this.players[i].id === id) {
+	          _this.players[i].name = snapshot.val().name;
+	          _this.forceUpdate();
+	          break;
+	        }
+	      }
+	    });
 	    return _this;
 	  }
 
@@ -39459,9 +39487,9 @@
 	      return _react2.default.createElement(
 	        'div',
 	        null,
-	        _react2.default.createElement(_GameModePlayer2.default, { players: this.players, onSelect: this.getPlayerOneDetails }),
+	        _react2.default.createElement(_GameModePlayer2.default, { players: this.props.players, onSelect: this.getPlayerOneDetails }),
 	        'vs',
-	        _react2.default.createElement(_GameModePlayer2.default, { players: this.players, onSelect: this.getPlayerTwoDetails }),
+	        _react2.default.createElement(_GameModePlayer2.default, { players: this.props.players, onSelect: this.getPlayerTwoDetails }),
 	        _react2.default.createElement(
 	          'button',
 	          { onClick: this.submit, disabled: disableSumbit },
@@ -39504,17 +39532,6 @@
 	      playerOne: undefined,
 	      playerTwo: undefined
 	    };
-
-	    _this.players = [{ name: 'default', rank: 0 }];
-
-	    _this.props.database.ref('players').on('child_added', function (snapshot) {
-	      var value = snapshot.val();
-	      _this.players.push({
-	        name: value.name,
-	        rank: value.rank
-	      });
-	      _this.forceUpdate();
-	    });
 	    return _this;
 	  }
 
@@ -39533,7 +39550,12 @@
 
 
 	GameMode.propTypes = {
-	  database: _react2.default.PropTypes.object.isRequired
+	  database: _react2.default.PropTypes.object.isRequired,
+	  players: _react2.default.PropTypes.arrayOf(_react2.default.PropTypes.shape({
+	    name: _react2.default.PropTypes.string.isRequired,
+	    rank: _react2.default.PropTypes.string.isRequired,
+	    id: _react2.default.PropTypes.string.isRequired
+	  })).isRequired
 	};
 
 /***/ },
@@ -39570,10 +39592,13 @@
 	  _createClass(GameModePlayer, [{
 	    key: 'render',
 	    value: function render() {
-	      var playersOptions = _lodash2.default.map(this.props.players, function (o) {
+	      var deafultPlayer = [{ name: 'Please select...', rank: '0', id: '...' }];
+	      var players = deafultPlayer.concat(this.props.players);
+
+	      var playersOptions = _lodash2.default.map(players, function (o) {
 	        return _react2.default.createElement(
 	          'option',
-	          { key: o.name },
+	          { key: o.id },
 	          o.name
 	        );
 	      });
@@ -39697,7 +39722,7 @@
 	        }
 	      };
 
-	      var players = _lodash2.default.map(this.players, function (o, index) {
+	      var players = _lodash2.default.map(this.props.players, function (o, index) {
 	        return _react2.default.createElement(_PlayerListPlayer2.default, { key: index, player: o, database: _this2.props.database });
 	      });
 
@@ -39739,34 +39764,6 @@
 	    _this.state = {
 	      add: false
 	    };
-
-	    _this.players = [];
-
-	    _this.props.database.ref('players').on('child_added', function (snapshot) {
-	      var value = snapshot.val();
-	      var baseUrl = 'https://table-tennis-handicap.firebaseio.com/players/';
-	      var url = snapshot.ref.toString();
-	      var id = url.substring(baseUrl.length);
-	      _this.players.push({
-	        name: value.name,
-	        rank: value.rank,
-	        id: id
-	      });
-	      _this.forceUpdate();
-	    });
-
-	    _this.props.database.ref('players').on('child_changed', function (snapshot) {
-	      var baseUrl = 'https://table-tennis-handicap.firebaseio.com/players/';
-	      var url = snapshot.ref.toString();
-	      var id = url.substring(baseUrl.length);
-	      for (var i = 0, len = _this.players.length; i < len; i++) {
-	        if (_this.players[i].id === id) {
-	          _this.players[i].name = snapshot.val().name;
-	          _this.forceUpdate();
-	          break;
-	        }
-	      }
-	    });
 	    return _this;
 	  }
 
@@ -39785,7 +39782,12 @@
 
 
 	PlayerList.propTypes = {
-	  database: _react2.default.PropTypes.object.isRequired
+	  database: _react2.default.PropTypes.object.isRequired,
+	  players: _react2.default.PropTypes.arrayOf(_react2.default.PropTypes.shape({
+	    name: _react2.default.PropTypes.string.isRequired,
+	    rank: _react2.default.PropTypes.string.isRequired,
+	    id: _react2.default.PropTypes.string.isRequired
+	  })).isRequired
 	};
 
 /***/ },
@@ -39823,9 +39825,10 @@
 	    key: 'render',
 	    value: function render() {
 	      var styles = {
-	        background: {},
-	        window: {}
+	        background: {}
 	      };
+
+	      var nameFocus = this.props.style.visibility === 'visible';
 
 	      return _react2.default.createElement(
 	        'div',
@@ -39834,10 +39837,7 @@
 	        _react2.default.createElement(
 	          'form',
 	          { onSubmit: this.handleSubmit },
-	          _react2.default.createElement(_FormRow2.default, {
-	            name: 'Name', type: 'string', onChange: this.handleNameChange,
-	            focus: this.props.style.visibility === 'visible'
-	          }),
+	          _react2.default.createElement(_FormRow2.default, { name: 'Name', type: 'string', onChange: this.handleNameChange, focus: nameFocus }),
 	          _react2.default.createElement(_FormRow2.default, { name: 'Initial Rank', type: 'number', onChange: this.handleScoreChange }),
 	          _react2.default.createElement('input', { type: 'submit', value: 'Add' })
 	        )
@@ -39893,15 +39893,10 @@
 
 	    _this.state = {
 	      name: '',
-	      rank: 0
+	      rank: '0'
 	    };
 	    return _this;
 	  }
-
-	  _createClass(AddPlayerWindow, [{
-	    key: 'componentDidMount',
-	    value: function componentDidMount() {}
-	  }]);
 
 	  return AddPlayerWindow;
 	}(_react2.default.Component);
@@ -40029,7 +40024,7 @@
 	          }, type: 'text', placeholder: this.props.player.name, onChange: this.handleNameChange })
 	      ) : _react2.default.createElement(
 	        'span',
-	        null,
+	        { onClick: this.editPlayerName },
 	        this.props.player.name
 	      );
 
@@ -40038,7 +40033,7 @@
 	        null,
 	        _react2.default.createElement(
 	          'div',
-	          { onClick: this.editPlayerName },
+	          null,
 	          playerName
 	        ),
 	        _react2.default.createElement(

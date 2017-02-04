@@ -14,10 +14,12 @@ export default class App extends React.Component {
       fontFamily: `Roboto`,
     };
 
-    const tabs = _.map(this.tabs, o => <Tab name={o} onClick={this.onChangeTab} key={o} selected={o === this.state.tabName} />);
+    const tabs = _.map(this.tabs, o =>
+      <Tab name={o} onClick={this.onChangeTab} key={o} selected={o === this.state.tabName} />);
 
     const body = this.state.tabName === `Game` ?
-      <GameMode database={this.database} /> : <PlayersList database={this.database} />;
+      <GameMode database={this.database} players={this.players} /> :
+      <PlayersList database={this.database} players={this.players} />;
 
     return (
       <div style={style}>
@@ -35,6 +37,12 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
 
+    this.tabs = [`Game`, `Players`];
+
+    this.state = {
+      tabName: `Game`,
+    };
+
     const config = {
       apiKey: `AIzaSyAXe3eYpZ0AaGg5UvZjj7l6_pk-Lclopq0`,
       authDomain: `table-tennis-handicap.firebaseapp.com`,
@@ -42,11 +50,33 @@ export default class App extends React.Component {
     };
     this.database = Firebase.initializeApp(config).database();
 
-    this.tabs = [`Game`, `Players`];
+    this.players = [];
 
-    this.state = {
-      tabName: `Game`,
-    };
+    this.database.ref(`players`).on(`child_added`, snapshot => {
+      const value = snapshot.val();
+      const baseUrl = `https://table-tennis-handicap.firebaseio.com/players/`;
+      const url = snapshot.ref.toString();
+      const id = url.substring(baseUrl.length);
+      this.players.push({
+        name: value.name,
+        rank: value.rank,
+        id,
+      });
+      this.forceUpdate();
+    });
+
+    this.database.ref(`players`).on(`child_changed`, snapshot => {
+      const baseUrl = `https://table-tennis-handicap.firebaseio.com/players/`;
+      const url = snapshot.ref.toString();
+      const id = url.substring(baseUrl.length);
+      for (let i = 0, len = this.players.length; i < len; i++) {
+        if (this.players[i].id === id) {
+          this.players[i].name = snapshot.val().name;
+          this.forceUpdate();
+          break;
+        }
+      }
+    });
   }
 
   onChangeTab = tabName => {

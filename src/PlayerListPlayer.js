@@ -7,12 +7,12 @@ export default class PlayerListPlayer extends React.Component {
         (<form onSubmit={this.saveName}>
           <input ref={o => { this.input = o; }} type={`text`} placeholder={this.props.player.name} onChange={this.handleNameChange} />
         </form>) :
-        <span>{this.props.player.name}</span>
+        <span onClick={this.editPlayerName}>{this.props.player.name}</span>
     );
 
     return (
       <div>
-        <div onClick={this.editPlayerName}>
+        <div>
           {playerName}
         </div>
         <div>

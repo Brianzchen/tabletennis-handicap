@@ -9,9 +9,9 @@ export default class GameMode extends React.Component {
 
     return (
       <div>
-        <GameModePlayer players={this.players} onSelect={this.getPlayerOneDetails} />
+        <GameModePlayer players={this.props.players} onSelect={this.getPlayerOneDetails} />
         vs
-        <GameModePlayer players={this.players} onSelect={this.getPlayerTwoDetails} />
+        <GameModePlayer players={this.props.players} onSelect={this.getPlayerTwoDetails} />
         <button onClick={this.submit} disabled={disableSumbit}>
           Submit
         </button>
@@ -26,17 +26,6 @@ export default class GameMode extends React.Component {
       playerOne: undefined,
       playerTwo: undefined,
     };
-
-    this.players = [{ name: `default`, rank: 0 }];
-
-    this.props.database.ref(`players`).on(`child_added`, snapshot => {
-      const value = snapshot.val();
-      this.players.push({
-        name: value.name,
-        rank: value.rank,
-      });
-      this.forceUpdate();
-    });
   }
 
   componentWillUnmount() {
@@ -71,4 +60,9 @@ export default class GameMode extends React.Component {
 
 GameMode.propTypes = {
   database: React.PropTypes.object.isRequired,
+  players: React.PropTypes.arrayOf(React.PropTypes.shape({
+    name: React.PropTypes.string.isRequired,
+    rank: React.PropTypes.string.isRequired,
+    id: React.PropTypes.string.isRequired,
+  })).isRequired,
 };
