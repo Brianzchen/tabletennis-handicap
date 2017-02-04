@@ -65,8 +65,10 @@ export default class AddPlayerWindow extends React.Component {
       }
 
       if (!contains) {
+        const name = this.state.name.substring(0, 1).toUpperCase() + this.state.name.substring(1).toLowerCase();
+
         this.props.database.ref(`players/`).push({
-          name: this.state.name,
+          name,
           rank: this.state.rank,
         });
       }

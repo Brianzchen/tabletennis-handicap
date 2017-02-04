@@ -40,8 +40,10 @@ export default class PlayerListPlayer extends React.Component {
   saveName = event => {
     event.preventDefault();
     if (this.state.name.trim().length > 0) {
+      const name = this.state.name.substring(0, 1).toUpperCase() + this.state.name.substring(1).toLowerCase();
+
       this.props.database.ref(`players/${this.props.player.id}/`).update({
-        name: this.state.name,
+        name,
       }, () => {
         this.setState({
           edit: false,

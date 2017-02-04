@@ -39702,8 +39702,10 @@
 	        }
 
 	        if (!contains) {
+	          var name = _this.state.name.substring(0, 1).toUpperCase() + _this.state.name.substring(1).toLowerCase();
+
 	          _this.props.database.ref('players/').push({
-	            name: _this.state.name,
+	            name: name,
 	            rank: _this.state.rank
 	          });
 	        }
@@ -39832,8 +39834,10 @@
 	    _this.saveName = function (event) {
 	      event.preventDefault();
 	      if (_this.state.name.trim().length > 0) {
+	        var name = _this.state.name.substring(0, 1).toUpperCase() + _this.state.name.substring(1).toLowerCase();
+
 	        _this.props.database.ref('players/' + _this.props.player.id + '/').update({
-	          name: _this.state.name
+	          name: name
 	        }, function () {
 	          _this.setState({
 	            edit: false
