@@ -39678,6 +39678,9 @@
 	    _this.handleSubmit = function (event) {
 	      _this.props.onSubmit();
 	      event.preventDefault();
+
+	      if (_this.state.name.trim().length === 0) return;
+
 	      var database = _this.props.database.ref('players/');
 	      database.once('value').then(function (snapshot) {
 	        var players = snapshot.val();
