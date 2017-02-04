@@ -58,14 +58,14 @@ export default class GameMode extends React.Component {
 
   recalculate = () => {
     if (this.state.playerOne && this.state.playerTwo) {
-      console.log(this.state.playerOne);
-      console.log(this.state.playerTwo);
+      console.log(this.state.playerOne); // eslint-disable-line
+      console.log(this.state.playerTwo); // eslint-disable-line
     }
   }
 
   submit = () => {
-    console.log(this.state.playerOne);
-    console.log(this.state.playerTwo);
+    console.log(this.state.playerOne); // eslint-disable-line
+    console.log(this.state.playerTwo); // eslint-disable-line
   }
 }
 

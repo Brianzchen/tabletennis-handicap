@@ -39490,14 +39490,14 @@
 
 	    _this.recalculate = function () {
 	      if (_this.state.playerOne && _this.state.playerTwo) {
-	        console.log(_this.state.playerOne);
-	        console.log(_this.state.playerTwo);
+	        console.log(_this.state.playerOne); // eslint-disable-line
+	        console.log(_this.state.playerTwo); // eslint-disable-line
 	      }
 	    };
 
 	    _this.submit = function () {
-	      console.log(_this.state.playerOne);
-	      console.log(_this.state.playerTwo);
+	      console.log(_this.state.playerOne); // eslint-disable-line
+	      console.log(_this.state.playerTwo); // eslint-disable-line
 	    };
 
 	    _this.state = {
