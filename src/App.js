@@ -6,20 +6,22 @@ import GameMode from './GameMode';
 import PlayersList from './PlayerList';
 import Tab from './Tab';
 import Tabs from './Tabs';
+import Title from './Title';
 
 export default class App extends React.Component {
   render() {
     const style = {
-
+      fontFamily: `Roboto`,
     };
 
-    const tabs = _.map(this.tabs, o => <Tab name={o} onClick={this.onChangeTab} key={o} />);
+    const tabs = _.map(this.tabs, o => <Tab name={o} onClick={this.onChangeTab} key={o} selected={o === this.state.tabName} />);
 
     const body = this.state.tabName === `Game` ?
       <GameMode database={this.database} /> : <PlayersList database={this.database} />;
 
     return (
       <div style={style}>
+        <Title />
         <Tabs>
           {tabs}
         </Tabs>

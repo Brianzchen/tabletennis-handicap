@@ -2,7 +2,8 @@ import React from 'react';
 
 export default function Tabs(props) {
   const style = {
-
+    background: `#00BCD4`,
+    display: `flex`,
   };
 
   return (

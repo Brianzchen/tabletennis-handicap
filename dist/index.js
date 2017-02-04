@@ -21548,6 +21548,10 @@
 
 	var _Tabs2 = _interopRequireDefault(_Tabs);
 
+	var _Title = __webpack_require__(194);
+
+	var _Title2 = _interopRequireDefault(_Title);
+
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -21566,10 +21570,12 @@
 	    value: function render() {
 	      var _this2 = this;
 
-	      var style = {};
+	      var style = {
+	        fontFamily: 'Roboto'
+	      };
 
 	      var tabs = _lodash2.default.map(this.tabs, function (o) {
-	        return _react2.default.createElement(_Tab2.default, { name: o, onClick: _this2.onChangeTab, key: o });
+	        return _react2.default.createElement(_Tab2.default, { name: o, onClick: _this2.onChangeTab, key: o, selected: o === _this2.state.tabName });
 	      });
 
 	      var body = this.state.tabName === 'Game' ? _react2.default.createElement(_GameMode2.default, { database: this.database }) : _react2.default.createElement(_PlayerList2.default, { database: this.database });
@@ -21577,6 +21583,7 @@
 	      return _react2.default.createElement(
 	        'div',
 	        { style: style },
+	        _react2.default.createElement(_Title2.default, null),
 	        _react2.default.createElement(
 	          _Tabs2.default,
 	          null,
@@ -39701,6 +39708,10 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _lodash = __webpack_require__(180);
+
+	var _lodash2 = _interopRequireDefault(_lodash);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -39732,12 +39743,23 @@
 	    key: 'render',
 	    value: function render() {
 	      var styles = {
-	        container: {}
+	        container: {
+	          color: '#FFFFFF',
+	          fontSize: '2em',
+	          padding: '0.5em 1em 0.5em 0.5em'
+	        },
+	        selected: {
+	          borderWidth: '0 0 2px 0',
+	          borderColor: '#FF5252',
+	          borderStyle: 'solid'
+	        }
 	      };
 
+	      var containerStyle = _lodash2.default.assign({}, styles.container, this.props.selected && styles.selected);
+
 	      return _react2.default.createElement(
-	        'div',
-	        { style: styles.container, onClick: this.select },
+	        'span',
+	        { style: containerStyle, onClick: this.select },
 	        this.props.name
 	      );
 	    }
@@ -39751,7 +39773,8 @@
 
 	Tab.propTypes = {
 	  name: _react2.default.PropTypes.string.isRequired,
-	  onClick: _react2.default.PropTypes.func.isRequired
+	  onClick: _react2.default.PropTypes.func.isRequired,
+	  selected: _react2.default.PropTypes.bool.isRequired
 	};
 
 /***/ },
@@ -39772,7 +39795,10 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function Tabs(props) {
-	  var style = {};
+	  var style = {
+	    background: '#00BCD4',
+	    display: 'flex'
+	  };
 
 	  return _react2.default.createElement(
 	    'div',
@@ -39784,6 +39810,38 @@
 	Tabs.propTypes = {
 	  children: _react2.default.PropTypes.arrayOf(_react2.default.PropTypes.element).isRequired
 	};
+
+/***/ },
+/* 194 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = Title;
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function Title() {
+	  var style = {
+	    background: '#0097A7',
+	    color: '#FFFFFF',
+	    fontSize: '2em',
+	    padding: '0.5em'
+	  };
+
+	  return _react2.default.createElement(
+	    'div',
+	    { style: style },
+	    'Table Tennis Handicap'
+	  );
+	}
 
 /***/ }
 /******/ ]);
