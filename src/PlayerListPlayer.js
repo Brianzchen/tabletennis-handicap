@@ -5,7 +5,7 @@ export default class PlayerListPlayer extends React.Component {
     const playerName = (
       this.state.edit ?
         (<form onSubmit={this.saveName}>
-          <input type={`text`} placeholder={this.props.player.name} onChange={this.handleNameChange} />
+          <input ref={o => { this.input = o; }} type={`text`} placeholder={this.props.player.name} onChange={this.handleNameChange} />
         </form>) :
         <span>{this.props.player.name}</span>
     );
@@ -29,6 +29,10 @@ export default class PlayerListPlayer extends React.Component {
       edit: false,
       name: ``,
     };
+  }
+
+  componentDidUpdate() {
+    this.input && this.input.focus();
   }
 
   handleNameChange = event => {

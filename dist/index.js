@@ -39658,7 +39658,10 @@
 	        _react2.default.createElement(
 	          'form',
 	          { onSubmit: this.handleSubmit },
-	          _react2.default.createElement(_FormRow2.default, { name: 'Name', type: 'string', onChange: this.handleNameChange }),
+	          _react2.default.createElement(_FormRow2.default, {
+	            name: 'Name', type: 'string', onChange: this.handleNameChange,
+	            focus: this.props.style.visibility === 'visible'
+	          }),
 	          _react2.default.createElement(_FormRow2.default, { name: 'Initial Rank', type: 'number', onChange: this.handleScoreChange }),
 	          _react2.default.createElement('input', { type: 'submit', value: 'Add' })
 	        )
@@ -39719,6 +39722,11 @@
 	    return _this;
 	  }
 
+	  _createClass(AddPlayerWindow, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {}
+	  }]);
+
 	  return AddPlayerWindow;
 	}(_react2.default.Component);
 
@@ -39740,7 +39748,8 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.default = FormRow;
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _react = __webpack_require__(2);
 
@@ -39748,19 +39757,60 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	function FormRow(props) {
-	  return _react2.default.createElement(
-	    'label',
-	    { htmlFor: props.name },
-	    props.name,
-	    _react2.default.createElement('input', { id: props.name, type: props.type, onChange: props.onChange })
-	  );
-	}
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var FormRow = function (_React$Component) {
+	  _inherits(FormRow, _React$Component);
+
+	  function FormRow() {
+	    _classCallCheck(this, FormRow);
+
+	    return _possibleConstructorReturn(this, (FormRow.__proto__ || Object.getPrototypeOf(FormRow)).apply(this, arguments));
+	  }
+
+	  _createClass(FormRow, [{
+	    key: 'render',
+	    value: function render() {
+	      var _this2 = this;
+
+	      return _react2.default.createElement(
+	        'label',
+	        { htmlFor: this.props.name },
+	        this.props.name,
+	        _react2.default.createElement('input', {
+	          ref: function ref(o) {
+	            _this2.input = o;
+	          }, id: this.props.name,
+	          type: this.props.type, onChange: this.props.onChange
+	        })
+	      );
+	    }
+	  }, {
+	    key: 'componentDidUpdate',
+	    value: function componentDidUpdate() {
+	      this.props.focus && this.input.focus();
+	    }
+	  }]);
+
+	  return FormRow;
+	}(_react2.default.Component);
+
+	exports.default = FormRow;
+
 
 	FormRow.propTypes = {
 	  name: _react2.default.PropTypes.string.isRequired,
 	  type: _react2.default.PropTypes.string.isRequired,
-	  onChange: _react2.default.PropTypes.func.isRequired
+	  onChange: _react2.default.PropTypes.func.isRequired,
+	  focus: _react2.default.PropTypes.bool
+	};
+
+	FormRow.defaultProps = {
+	  focus: false
 	};
 
 /***/ },
@@ -39793,10 +39843,14 @@
 	  _createClass(PlayerListPlayer, [{
 	    key: 'render',
 	    value: function render() {
+	      var _this2 = this;
+
 	      var playerName = this.state.edit ? _react2.default.createElement(
 	        'form',
 	        { onSubmit: this.saveName },
-	        _react2.default.createElement('input', { type: 'text', placeholder: this.props.player.name, onChange: this.handleNameChange })
+	        _react2.default.createElement('input', { ref: function ref(o) {
+	            _this2.input = o;
+	          }, type: 'text', placeholder: this.props.player.name, onChange: this.handleNameChange })
 	      ) : _react2.default.createElement(
 	        'span',
 	        null,
@@ -39858,6 +39912,13 @@
 	    };
 	    return _this;
 	  }
+
+	  _createClass(PlayerListPlayer, [{
+	    key: 'componentDidUpdate',
+	    value: function componentDidUpdate() {
+	      this.input && this.input.focus();
+	    }
+	  }]);
 
 	  return PlayerListPlayer;
 	}(_react2.default.Component);

@@ -17,7 +17,10 @@ export default class AddPlayerWindow extends React.Component {
       <div style={this.props.style}>
         <div style={styles.background} />
         <form onSubmit={this.handleSubmit}>
-          <FormRow name={`Name`} type={`string`} onChange={this.handleNameChange} />
+          <FormRow
+            name={`Name`} type={`string`} onChange={this.handleNameChange}
+            focus={this.props.style.visibility === `visible`}
+          />
           <FormRow name={`Initial Rank`} type={`number`} onChange={this.handleScoreChange} />
           <input type={`submit`} value={`Add`} />
         </form>
@@ -32,6 +35,9 @@ export default class AddPlayerWindow extends React.Component {
       name: ``,
       rank: 0,
     };
+  }
+
+  componentDidMount() {
   }
 
   handleNameChange = event => {
